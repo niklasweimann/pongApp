@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.StrictMode;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -19,19 +20,15 @@ import android.view.SurfaceView;
  *
  * @author Jan Bauerdick
  */
-public class Pong extends SurfaceView implements SurfaceHolder.Callback, Orientation.Callback {//TODO
+public class Pong extends SurfaceView implements SurfaceHolder.Callback, Orientation.Callback {
 
-    private ArrayList<GameObject> elements = new ArrayList<>();
+    private final ArrayList<GameObject> elements = new ArrayList<>();
     private GameThread thread;
     private Context parentContext;
     private boolean gameActive;
     private int acceleration;
     Orientation orientation;
-    private float orientation_x;
-    /*private int ball_coords_x;
-    private int ball_coords_x_speed;
-    private int points_p2 = 0;
-    private int points_p1 = 0;*/
+    private float ori_X;
 
     public Pong(Context context) {
         super(context);
@@ -136,8 +133,8 @@ public class Pong extends SurfaceView implements SurfaceHolder.Callback, Orienta
                 Paddle p1 = (Paddle) elements.get(0);
                 coord = p1.getCoordinates();
                 speed = p1.getSpeed();
-                speed.setX((int) orientation_x);
-                speed.setXDirection((int) orientation_x);
+                speed.setX((int) ori_X);
+                speed.setXDirection((int) ori_X);
                 if (speed.getXDirection() == Speed.X_DIRECTION_RIGHT) {
                     coord.setX(coord.getX() + speed.getX());
                 } else {
@@ -270,6 +267,8 @@ public class Pong extends SurfaceView implements SurfaceHolder.Callback, Orienta
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         initGame();
         thread.setRunning(true);
         thread.start();
@@ -290,6 +289,6 @@ public class Pong extends SurfaceView implements SurfaceHolder.Callback, Orienta
 
     @Override
     public void orientationChanged(float x, float y, float z) {
-        this.orientation_x = x;
+        ori_X = x;
     }
 }

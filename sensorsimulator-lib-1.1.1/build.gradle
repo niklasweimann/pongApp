@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('sensorsimulator-lib-1.1.1.jar'))
